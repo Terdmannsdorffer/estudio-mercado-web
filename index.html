@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Estudio de Mercado</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231D1D1F'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23E8ECF0' stroke-width='1.4'/%3E%3Crect x='11' y='8.5' width='10' height='6.5' rx='3.25' fill='none' stroke='%23E8ECF0' stroke-width='1.8'/%3E%3C/svg%3E" />
+  <script>
+    // Fondo elegido (se aplica antes de pintar para evitar parpadeo). "liso" o "latas".
+    try {
+      const f = localStorage.getItem("estudio_mercado_fondo");
+      const ok = ["latas", "gato", "perro", "vaca", "liso"];
+      document.documentElement.dataset.backdrop = ok.includes(f) ? f : (f === "plain" ? "liso" : "latas");
+    } catch (e) { document.documentElement.dataset.backdrop = "latas"; }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=7" />
+</head>
+<body>
+  <!-- Íconos -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.2 12 3.5l8.5 6.7V19a1.5 1.5 0 0 1-1.5 1.5h-4.2v-5.6H9.2v5.6H5A1.5 1.5 0 0 1 3.5 19z"/></symbol>
+    <symbol id="i-add" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.6" cy="6.5" r="1.1"/><circle cx="4.6" cy="12" r="1.1"/><circle cx="4.6" cy="17.5" r="1.1"/></symbol>
+    <symbol id="i-import" viewBox="0 0 24 24"><path d="M12 3.5v11m0 0-4-4m4 4 4-4M4 14.5V18a2.5 2.5 0 0 0 2.5 2.5h11A2.5 2.5 0 0 0 20 18v-3.5"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4.5" rx="1.2"/><path d="M4.8 8.5V18a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V8.5M10 12.5h4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m20 20-4.4-4.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M10.3 4.2 2.9 17.5A2 2 0 0 0 4.6 20.5h14.8a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.5M12 7.8h.01"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v11m0 0-4-4m4 4 4-4M4.5 20h15"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.8 12.2a1.5 1.5 0 0 0 1.5 1.3h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5.5 12v8h13v-8M10 20v-4.5h4V20"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="2.8"/><path d="M4.5 6v12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V6M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
+  </svg>
+
+  <!-- Inicio de sesión (solo cuando la app está conectada a la nube) -->
+  <div id="auth" class="auth" hidden>
+    <div class="card auth-card">
+      <svg class="app-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle class="lid" cx="16" cy="16" r="15"/>
+        <circle class="ring" cx="16" cy="16" r="11.5"/>
+        <rect class="tab" x="11" y="8.5" width="10" height="6.5" rx="3.25"/>
+      </svg>
+      <h1 class="auth-title">Estudio de Mercado</h1>
+      <p class="auth-sub">Alimento húmedo · Chile</p>
+
+      <div data-auth-mode="loading"><p class="auth-note">Conectando…</p></div>
+
+      <div data-auth-mode="error">
+        <p class="auth-msg is-error" hidden></p>
+        <button type="button" class="btn btn-primary btn-block" onclick="location.reload()">Reintentar</button>
+      </div>
+
+      <form data-auth-mode="login" novalidate>
+        <p class="auth-msg" hidden></p>
+        <div class="field">
+          <label for="auth-email">Email</label>
+          <input id="auth-email" name="email" type="email" class="input" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="auth-password">Contraseña</label>
+          <input id="auth-password" name="password" type="password" class="input" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        <button type="button" class="link-btn" data-auth-go="reset">¿Olvidaste tu contraseña?</button>
+      </form>
+
+      <form data-auth-mode="reset" novalidate>
+        <p class="auth-msg" hidden></p>
+        <p class="auth-note">Escribe tu email y te enviaremos un enlace para crear una contraseña nueva.</p>
+        <div class="field">
+          <label for="auth-reset-email">Email</label>
+          <input id="auth-reset-email" name="email" type="email" class="input" autocomplete="username" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Enviar enlace</button>
+        <button type="button" class="link-btn" data-auth-go="login">Volver</button>
+      </form>
+
+      <form data-auth-mode="password" novalidate>
+        <p class="auth-msg" hidden></p>
+        <p class="auth-note">Crea tu contraseña. Usa al menos 10 caracteres.</p>
+        <div class="field">
+          <label for="auth-new">Contraseña nueva</label>
+          <input id="auth-new" name="password" type="password" class="input" autocomplete="new-password" minlength="10" required />
+        </div>
+        <div class="field">
+          <label for="auth-new2">Repite la contraseña</label>
+          <input id="auth-new2" name="password2" type="password" class="input" autocomplete="new-password" minlength="10" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Guardar contraseña</button>
+      </form>
+
+      <div data-auth-mode="denied">
+        <p class="auth-note">La cuenta <strong data-auth-email></strong> todavía no tiene acceso a este estudio. Pide que te agreguen y vuelve a entrar.</p>
+        <button type="button" class="btn btn-secondary btn-block" data-auth-signout>Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- Barra lateral (computador) -->
+    <aside class="sidebar glass" aria-label="Secciones">
+      <div class="brand">
+        <!-- Marca: la tapa de una lata vista desde arriba -->
+        <svg class="app-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <circle class="lid" cx="16" cy="16" r="15"/>
+          <circle class="ring" cx="16" cy="16" r="11.5"/>
+          <rect class="tab" x="11" y="8.5" width="10" height="6.5" rx="3.25"/>
+        </svg>
+        <div>
+          <div class="brand-title">Estudio de Mercado</div>
+          <div class="brand-sub">Alimento húmedo · Chile</div>
+        </div>
+      </div>
+      <nav class="side-nav">
+        <a href="#inicio" data-route="inicio"><svg class="icon"><use href="#i-home"/></svg>Inicio</a>
+        <a href="#agregar" data-route="agregar"><svg class="icon"><use href="#i-add"/></svg>Agregar precio</a>
+        <a href="#productos" data-route="productos"><svg class="icon"><use href="#i-list"/></svg>Productos</a>
+        <a href="#importar" data-route="importar"><svg class="icon"><use href="#i-import"/></svg>Importar</a>
+        <a href="#respaldo" data-route="respaldo"><svg class="icon"><use href="#i-archive"/></svg>Respaldo y ajustes</a>
+      </nav>
+      <div class="side-status" id="save-status" aria-live="polite"></div>
+    </aside>
+
+    <main class="main" id="main" tabindex="-1">
+
+      <!-- ============ INICIO ============ -->
+      <section class="view" id="view-inicio" data-view="inicio" hidden>
+        <header class="page-head">
+          <div>
+            <h1 class="large-title">Resumen de precios</h1>
+            <p class="page-sub" id="home-caption"></p>
+          </div>
+          <div class="filters">
+            <div class="segmented" role="radiogroup" aria-label="Especie" id="home-species">
+              <button type="button" role="radio" data-value="ALL" aria-checked="true">Todos</button>
+              <button type="button" role="radio" data-value="Gato" aria-checked="false">Gato</button>
+              <button type="button" role="radio" data-value="Perro" aria-checked="false">Perro</button>
+              <button type="button" role="radio" data-value="Perro y gato" aria-checked="false">Ambos</button>
+            </div>
+            <label class="visually-hidden" for="home-store">Comercio</label>
+            <select id="home-store" class="select select-compact"></select>
+          </div>
+        </header>
+
+        <section class="card kpis" id="kpis" aria-label="Indicadores principales"></section>
+
+        <div class="grid-2">
+          <article class="card chart-card">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Precio por kilo según tipo de alimento</h2>
+                <p class="card-sub">Precio típico (mediana) de cada tipo, gato y perro por separado.</p>
+              </div>
+              <button type="button" class="link-btn" data-toggle-table="chart-type">Ver datos</button>
+            </header>
+            <div class="legend" aria-hidden="true">
+              <span><i class="sw s-gato"></i>Gato</span>
+              <span><i class="sw s-perro"></i>Perro</span>
+            </div>
+            <div class="chart" id="chart-type"></div>
+            <div class="chart-table" id="chart-type-table" hidden></div>
+          </article>
+
+          <article class="card chart-card">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Precio por kilo en cada comercio</h2>
+                <p class="card-sub">El punto es el precio típico. La barra muestra dónde está la mayoría de los productos.</p>
+              </div>
+              <button type="button" class="link-btn" data-toggle-table="chart-store">Ver datos</button>
+            </header>
+            <div class="chart" id="chart-store"></div>
+            <div class="chart-table" id="chart-store-table" hidden></div>
+          </article>
+        </div>
+
+        <article class="card">
+          <header class="card-head">
+            <div>
+              <h2 class="card-title">Mismo producto, distinto precio</h2>
+              <p class="card-sub" id="deals-sub">Productos idénticos que cuestan distinto según el comercio.</p>
+            </div>
+          </header>
+          <ul class="deal-list" id="deal-list"></ul>
+          <div class="card-foot" id="deals-foot"></div>
+        </article>
+
+        <button type="button" class="disclosure" id="detail-toggle" aria-expanded="false" aria-controls="detail">
+          <span>Análisis detallado</span>
+          <svg class="icon"><use href="#i-chevron"/></svg>
+        </button>
+
+        <div id="detail" hidden>
+          <div class="grid-2">
+            <article class="card chart-card">
+              <header class="card-head">
+                <div>
+                  <h2 class="card-title">Tamaño del envase y precio por kilo</h2>
+                  <p class="card-sub" id="scatter-sub">Cada punto es un producto. Toca o pasa el cursor para ver cuál es.</p>
+                </div>
+              </header>
+              <div class="legend" aria-hidden="true">
+                <span><i class="sw s-gato"></i>Gato</span>
+                <span><i class="sw s-perro"></i>Perro</span>
+                <span><i class="sw s-ambos"></i>Perro y gato</span>
+              </div>
+              <div class="chart" id="chart-scatter"></div>
+            </article>
+
+            <article class="card chart-card">
+              <header class="card-head">
+                <div>
+                  <h2 class="card-title">Proteínas más comunes</h2>
+                  <p class="card-sub">Precio típico por kilo de las 8 proteínas con más productos.</p>
+                </div>
+                <button type="button" class="link-btn" data-toggle-table="chart-protein">Ver datos</button>
+              </header>
+              <div class="chart" id="chart-protein"></div>
+              <div class="chart-table" id="chart-protein-table" hidden></div>
+            </article>
+          </div>
+
+          <article class="card">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Estadística descriptiva por especie y tipo</h2>
+                <p class="card-sub">Mediana, media, desviación estándar y rango intercuartílico (P25–P75) del precio por kilo.</p>
+              </div>
+            </header>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Especie</th>
+                    <th scope="col">Tipo de alimento</th>
+                    <th scope="col" class="num">N</th>
+                    <th scope="col" class="num">Mediana</th>
+                    <th scope="col" class="num">Media</th>
+                    <th scope="col" class="num">Desv. est.</th>
+                    <th scope="col" class="num">P25 – P75</th>
+                    <th scope="col" class="num">Peso típico</th>
+                  </tr>
+                </thead>
+                <tbody id="stats-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ AGREGAR PRECIO ============ -->
+      <section class="view" id="view-agregar" data-view="agregar" hidden>
+        <header class="page-head">
+          <div>
+            <h1 class="large-title">Agregar precio</h1>
+            <p class="page-sub">Busca el producto, elige el comercio y anota el precio.</p>
+          </div>
+        </header>
+
+        <form id="add-form" class="add-layout" novalidate>
+          <article class="card step">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">¿Qué producto?</h2>
+              </div>
+            </header>
+
+            <div id="product-picker">
+              <div class="search-field">
+                <svg class="icon"><use href="#i-search"/></svg>
+                <input id="product-search" type="search" class="input" placeholder="Busca por marca o nombre, ej: Belcando ave" autocomplete="off" aria-label="Buscar producto existente" aria-controls="product-results" />
+              </div>
+              <ul id="product-results" class="result-list" aria-label="Productos encontrados" aria-live="polite"></ul>
+              <button type="button" class="btn btn-secondary btn-block" id="new-product-btn">
+                <svg class="icon"><use href="#i-add"/></svg>Es un producto nuevo
+              </button>
+            </div>
+
+            <div id="product-chosen" class="chosen" hidden>
+              <div>
+                <div class="chosen-title" id="chosen-title"></div>
+                <div class="chosen-sub" id="chosen-sub"></div>
+              </div>
+              <button type="button" class="link-btn" id="change-product">Cambiar</button>
+            </div>
+
+            <div id="product-fields" class="form-grid" hidden>
+              <div class="field">
+                <label for="f-marca">Marca</label>
+                <input id="f-marca" class="input" list="dl-marcas" autocomplete="off" placeholder="Ej: Belcando" />
+                <datalist id="dl-marcas"></datalist>
+                <p class="field-error" id="e-marca" hidden></p>
+              </div>
+              <div class="field span-2">
+                <label for="f-producto">Nombre del producto</label>
+                <input id="f-producto" class="input" autocomplete="off" placeholder="Como aparece en el envase" />
+                <p class="field-error" id="e-producto" hidden></p>
+              </div>
+              <div class="field span-3">
+                <span class="label" id="l-especie">Para</span>
+                <div class="segmented segmented-fill" role="radiogroup" aria-labelledby="l-especie" id="f-especie">
+                  <button type="button" role="radio" data-value="Gato" aria-checked="true">Gato</button>
+                  <button type="button" role="radio" data-value="Perro" aria-checked="false">Perro</button>
+                  <button type="button" role="radio" data-value="Perro y gato" aria-checked="false">Perro y gato</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-peso">Peso neto (gramos)</label>
+                <input id="f-peso" class="input num-input" inputmode="decimal" autocomplete="off" placeholder="Ej: 400" />
+                <div class="chips" id="weight-presets" aria-label="Pesos frecuentes"></div>
+                <p class="field-error" id="e-peso" hidden></p>
+              </div>
+              <div class="field">
+                <label for="f-formato">Envase</label>
+                <select id="f-formato" class="select"></select>
+              </div>
+              <div class="field">
+                <label for="f-clasificacion">Tipo de alimento</label>
+                <select id="f-clasificacion" class="select"></select>
+              </div>
+              <div class="field">
+                <label for="f-etapa">Etapa de vida</label>
+                <select id="f-etapa" class="select"></select>
+              </div>
+              <div class="field">
+                <label for="f-textura">Textura</label>
+                <select id="f-textura" class="select"></select>
+              </div>
+              <div class="field">
+                <label for="f-proteina">Proteína principal</label>
+                <input id="f-proteina" class="input" list="dl-proteinas" autocomplete="off" placeholder="Ej: Pollo" />
+                <datalist id="dl-proteinas"></datalist>
+              </div>
+              <div class="field span-3">
+                <label for="f-sabor">Sabor <span class="optional">(opcional)</span></label>
+                <input id="f-sabor" class="input" autocomplete="off" placeholder="Ej: Salmón y arándanos" />
+              </div>
+            </div>
+          </article>
+
+          <article class="card step">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">¿Dónde y cuánto?</h2>
+              </div>
+            </header>
+            <div class="form-grid">
+              <div class="field span-3">
+                <span class="label" id="l-comercio">Comercio</span>
+                <div class="chips chips-lg" role="radiogroup" aria-labelledby="l-comercio" id="f-comercio"></div>
+              </div>
+              <div class="field">
+                <label for="f-precio">Precio</label>
+                <div class="input-prefix">
+                  <span aria-hidden="true">$</span>
+                  <input id="f-precio" class="input num-input" inputmode="numeric" autocomplete="off" placeholder="Ej: 5.490" />
+                </div>
+                <p class="field-error" id="e-precio" hidden></p>
+              </div>
+              <div class="field">
+                <label for="f-fecha">Fecha en que viste el precio</label>
+                <input id="f-fecha" type="date" class="input" />
+              </div>
+            </div>
+
+            <div class="result-panel" id="price-result" aria-live="polite"></div>
+
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Guardar precio</button>
+              <button type="button" class="btn btn-secondary" id="save-next">Guardar y anotar en otro comercio</button>
+            </div>
+          </article>
+        </form>
+      </section>
+
+      <!-- ============ PRODUCTOS ============ -->
+      <section class="view" id="view-productos" data-view="productos" hidden>
+        <header class="page-head">
+          <div>
+            <h1 class="large-title">Productos</h1>
+            <p class="page-sub" id="list-caption"></p>
+          </div>
+        </header>
+
+        <div class="card toolbar-card">
+          <div class="search-field grow">
+            <svg class="icon"><use href="#i-search"/></svg>
+            <input id="list-search" type="search" class="input" placeholder="Buscar marca, producto, sabor, proteína o comercio" aria-label="Buscar" />
+          </div>
+          <div class="segmented" role="radiogroup" aria-label="Especie" id="list-species">
+            <button type="button" role="radio" data-value="ALL" aria-checked="true">Todos</button>
+            <button type="button" role="radio" data-value="Gato" aria-checked="false">Gato</button>
+            <button type="button" role="radio" data-value="Perro" aria-checked="false">Perro</button>
+            <button type="button" role="radio" data-value="Perro y gato" aria-checked="false">Ambos</button>
+          </div>
+          <label class="visually-hidden" for="list-store">Comercio</label>
+          <select id="list-store" class="select select-compact"></select>
+          <label class="visually-hidden" for="list-sort">Ordenar</label>
+          <select id="list-sort" class="select select-compact">
+            <option value="recent">Más recientes</option>
+            <option value="brand">Marca (A–Z)</option>
+            <option value="kg-asc">Precio por kilo: menor a mayor</option>
+            <option value="kg-desc">Precio por kilo: mayor a menor</option>
+          </select>
+        </div>
+
+        <div class="card table-card">
+          <div class="table-wrap">
+            <table class="table table-rows">
+              <thead>
+                <tr>
+                  <th scope="col">Producto</th>
+                  <th scope="col">Comercio</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col" class="num">Precio</th>
+                  <th scope="col" class="num">Por kilo</th>
+                </tr>
+              </thead>
+              <tbody id="list-body"></tbody>
+            </table>
+          </div>
+          <div class="pager">
+            <span id="pager-label"></span>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" id="pager-prev">Anterior</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="pager-next">Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ IMPORTAR ============ -->
+      <section class="view" id="view-importar" data-view="importar" hidden>
+        <header class="page-head">
+          <div>
+            <h1 class="large-title">Importar</h1>
+            <p class="page-sub">Trae muchos precios de una vez desde un archivo Excel o CSV.</p>
+          </div>
+        </header>
+
+        <div class="grid-import">
+          <article class="card">
+            <label class="dropzone" id="dropzone" for="import-file">
+              <svg class="icon icon-lg"><use href="#i-import"/></svg>
+              <span class="dz-title">Elige un archivo Excel o CSV</span>
+              <span class="dz-sub">o arrástralo aquí. Sirve el archivo «Estudio de Mercado.xlsx» o una copia descargada desde esta app.</span>
+              <input type="file" id="import-file" accept=".xlsx,.csv,.tsv,.txt" class="visually-hidden" />
+            </label>
+
+            <details class="paste-box">
+              <summary>O pega filas copiadas desde Excel</summary>
+              <p class="hint">Copia las filas en Excel (incluye la fila de títulos si puedes) y pégalas aquí.</p>
+              <label class="visually-hidden" for="import-text">Filas pegadas</label>
+              <textarea id="import-text" class="input textarea" rows="7" placeholder="Pega aquí…"></textarea>
+              <button type="button" class="btn btn-secondary btn-sm" id="import-text-btn">Revisar filas pegadas</button>
+            </details>
+          </article>
+
+          <article class="card" id="import-review" hidden>
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Revisión antes de importar</h2>
+                <p class="card-sub" id="import-source"></p>
+              </div>
+            </header>
+            <div class="summary-pills" id="import-summary"></div>
+
+            <fieldset class="radio-group">
+              <legend>¿Qué hacer con estos datos?</legend>
+              <label class="radio-row">
+                <input type="radio" name="import-mode" value="merge" checked />
+                <span><strong>Agregar a mis datos</strong><br><span class="muted">Los precios repetidos se actualizan, no se duplican.</span></span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="import-mode" value="replace" />
+                <span><strong>Reemplazar todos mis datos por este archivo</strong><br><span class="muted">Úsalo para recuperar una copia de respaldo.</span></span>
+              </label>
+            </fieldset>
+
+            <div class="actions">
+              <button type="button" class="btn btn-primary" id="import-commit">Importar</button>
+              <button type="button" class="btn btn-secondary" id="import-cancel">Cancelar</button>
+            </div>
+
+            <div class="table-wrap import-table">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Fila</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Comercio</th>
+                    <th scope="col" class="num">Precio</th>
+                    <th scope="col" class="num">Por kilo</th>
+                  </tr>
+                </thead>
+                <tbody id="import-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ RESPALDO Y AJUSTES ============ -->
+      <section class="view" id="view-respaldo" data-view="respaldo" hidden>
+        <header class="page-head">
+          <div>
+            <h1 class="large-title">Respaldo y ajustes</h1>
+            <p class="page-sub">Guarda una copia de tus datos y administra la lista de comercios.</p>
+          </div>
+        </header>
+
+        <div class="grid-2">
+          <div class="stack">
+            <article class="card">
+              <header class="card-head">
+                <div>
+                  <h2 class="card-title">Copia de seguridad</h2>
+                  <p class="card-sub" id="backup-where">Por ahora tus datos se guardan solo en este navegador, en este computador. Si borras el historial del navegador o usas otro equipo, no los verás.</p>
+                </div>
+              </header>
+              <div class="backup-status" id="backup-status"></div>
+              <div class="actions">
+                <button type="button" class="btn btn-primary" id="backup-btn"><svg class="icon"><use href="#i-download"/></svg>Descargar copia (Excel)</button>
+              </div>
+              <p class="hint">Para recuperar una copia: ve a <a href="#importar">Importar</a>, elige el archivo y marca «Reemplazar todos mis datos».</p>
+            </article>
+          <article class="card">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Apariencia</h2>
+                <p class="card-sub">El fondo de latas le da al vidrio de las tarjetas algo que curvar en sus bordes.</p>
+              </div>
+            </header>
+            <div class="segmented backdrop-choice" role="radiogroup" aria-label="Fondo" id="backdrop-choice">
+              <button type="button" role="radio" data-value="latas" aria-checked="true">Latas</button>
+              <button type="button" role="radio" data-value="gato" aria-checked="false">Gato</button>
+              <button type="button" role="radio" data-value="perro" aria-checked="false">Perro</button>
+              <button type="button" role="radio" data-value="vaca" aria-checked="false">Vaca</button>
+              <button type="button" role="radio" data-value="liso" aria-checked="false">Liso</button>
+            </div>
+            <p class="hint" id="photo-credit"></p>
+            <p class="hint" id="glass-support"></p>
+          </article>
+          </div>
+
+          <article class="card">
+            <header class="card-head">
+              <div>
+                <h2 class="card-title">Comercios</h2>
+                <p class="card-sub">Los comercios que aparecen al agregar un precio.</p>
+              </div>
+            </header>
+            <ul class="store-list" id="store-list"></ul>
+            <form class="store-add" id="store-add" novalidate>
+              <div class="field">
+                <label for="s-nombre">Nuevo comercio</label>
+                <input id="s-nombre" class="input" placeholder="Ej: Petco" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="s-canal">Tipo</label>
+                <select id="s-canal" class="select">
+                  <option>Tienda de mascotas</option>
+                  <option>Supermercado</option>
+                  <option>Veterinaria</option>
+                  <option>Tienda online</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-secondary">Agregar</button>
+            </form>
+          </article>
+        </div>
+
+        <article class="card">
+          <header class="card-head">
+            <div>
+              <h2 class="card-title">PostgreSQL</h2>
+              <p class="card-sub">Script completo para crear la base de datos (3FN) y cargar todos los precios. Se puede ejecutar en pgAdmin o psql.</p>
+            </div>
+          </header>
+          <div class="actions">
+            <button type="button" class="btn btn-secondary" id="sql-download"><svg class="icon"><use href="#i-db"/></svg>Descargar script .sql</button>
+            <button type="button" class="btn btn-secondary" id="sql-copy"><svg class="icon"><use href="#i-copy"/></svg>Copiar al portapapeles</button>
+          </div>
+          <details class="sql-details">
+            <summary>Ver el script</summary>
+            <pre class="code" id="sql-preview"></pre>
+          </details>
+        </article>
+
+        <article class="card danger-card">
+          <header class="card-head">
+            <div>
+              <h2 class="card-title">Volver a los datos originales</h2>
+              <p class="card-sub">Reemplaza todo por los 342 precios del estudio original. Se pierden los precios agregados después.</p>
+            </div>
+          </header>
+          <div class="actions">
+            <button type="button" class="btn btn-destructive" id="reset-btn">Volver a los datos originales…</button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Barra de pestañas (teléfono) -->
+    <nav class="tabbar glass" aria-label="Secciones">
+      <a href="#inicio" data-route="inicio"><svg class="icon"><use href="#i-home"/></svg><span>Inicio</span></a>
+      <a href="#agregar" data-route="agregar"><svg class="icon"><use href="#i-add"/></svg><span>Agregar</span></a>
+      <a href="#productos" data-route="productos"><svg class="icon"><use href="#i-list"/></svg><span>Productos</span></a>
+      <a href="#importar" data-route="importar"><svg class="icon"><use href="#i-import"/></svg><span>Importar</span></a>
+      <a href="#respaldo" data-route="respaldo"><svg class="icon"><use href="#i-archive"/></svg><span>Respaldo</span></a>
+    </nav>
+  </div>
+
+  <div id="tooltip" class="tooltip glass" role="tooltip" hidden></div>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <dialog id="sheet" class="sheet glass" aria-labelledby="sheet-title">
+    <form method="dialog" id="sheet-form" novalidate>
+      <header class="sheet-head">
+        <h2 id="sheet-title"></h2>
+        <button type="button" class="icon-btn" id="sheet-close" aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button>
+      </header>
+      <div class="sheet-body" id="sheet-body"></div>
+      <footer class="sheet-foot" id="sheet-foot"></footer>
+    </form>
+  </dialog>
+
+  <script src="js/config.js?v=7"></script>
+  <script src="js/store.js?v=7"></script>
+  <script src="js/store-supabase.js?v=7"></script>
+  <script src="js/auth.js?v=7"></script>
+  <script src="js/xlsx.js?v=7"></script>
+  <script src="js/charts.js?v=7"></script>
+  <script src="js/sql.js?v=7"></script>
+  <script src="js/glass.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
+</body>
+</html>
